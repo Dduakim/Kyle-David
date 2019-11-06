@@ -1,3 +1,6 @@
+# C
+
+* [Spiral Rule for reading C Declarations](http://c-faq.com/decl/spiral.anderson.html)
 
 # Databases and Data Architecture
 
