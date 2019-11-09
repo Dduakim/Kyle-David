@@ -18,3 +18,10 @@
 
 * [Domain Driven Design](https://airbrake.io/blog/software-design/domain-driven-design)
 * [SOLID Principles](https://en.wikipedia.org/wiki/SOLID)
+
+# "Falsehoods" and "Falacies"
+
+* [Falacies of Distributed Computing](https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing)
+* [Falsehoods Programmers Believe About Names](https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)
+* [Falsehoods Programmers Believe About Time](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time)
+* [Meta List of Falsehoods](https://github.com/kdeldycke/awesome-falsehood)
