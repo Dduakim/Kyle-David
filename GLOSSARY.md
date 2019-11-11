@@ -26,3 +26,8 @@
 * [Falsehoods Programmers Believe About Names](https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/)
 * [Falsehoods Programmers Believe About Time](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time)
 * [Meta List of Falsehoods](https://github.com/kdeldycke/awesome-falsehood)
+
+# Data Structures
+
+* [Basics of Linked Lists](https://www.hackerearth.com/practice/data-structures/linked-list/singly-linked-list/tutorial/)
+* [Basics of Tries](https://www.techiedelight.com/trie-implementation-insert-search-delete/)
