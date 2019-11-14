@@ -26,7 +26,7 @@ void createNodeList(int n)
 {
     struct node *lastNode, *temp; // just declaring structs & variables
     int num, i;
-    startNode = (struct node *)malloc(sizeof(struct node)); // dynamically allocating memory the size of a node and storing it at pointer to startNode
+    startNode = (struct node *)malloc(sizeof(struct node)); // dynamically allocating memory the size of a node pointer startNode points to it
 
     if (startNode == NULL) // just in case memory cannot be allocated, in which case it would point to NULL
     {
@@ -36,9 +36,9 @@ void createNodeList(int n)
     {
         printf("Input data for node 1: ");
         scanf("%i", &num); // receive input from user, store at address to int num
-        startNode -> num = num; // make it so that the value stored at startNode is now equal to the num we received from user
+        startNode -> num = num; // make it so that the value stored at startNode pointing node is now equal to the num we received from user
         startNode -> next = NULL; // make the pointer that startNode points to equal NULL; this is now the last link
-        temp = startNode; // setting our temporary node as equal to our startNode
+        temp = startNode; // pointer temp now points to same node as startNode points to
 
         for (i = 2; i <= n; i++) // iterating through until hits number of n (size of linked list); starts at 2 to prevent issues with linked list of size 1
         {
@@ -54,10 +54,10 @@ void createNodeList(int n)
                 scanf("%i", &num);
 
                 lastNode -> num = num; // assign value in node to number received
-                lastNode -> next = NULL; // set the pointer value in lastNode to NULL
+                lastNode -> next = NULL; // pointer in lastNode now points to NULL
 
                 temp -> next = lastNode; // make pointer in temp node now point to lastNode
-                temp = temp -> next; // not sure about this one...
+                temp = temp -> next; // temp pointer now points to where next points to
 
             }
         }
@@ -74,10 +74,10 @@ void displayList()
     else
     {
         temp = startNode;
-        while (temp != NULL) // basically recursive, it continues printing until it reaches the start node which has value NULL
+        while (temp != NULL) // it continues printing until it reaches the node which has value NULL
         {
             printf("Data = %i\n", temp -> num); // printing the number value held at temp node
-            temp = temp -> next; // moving temp pointer along?
+            temp = temp -> next; // moving temp pointer along
         }
     }
 }
