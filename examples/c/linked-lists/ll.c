@@ -16,10 +16,8 @@ typedef struct Node {
   struct Node* next;
 } Node;
 
-static Node ll_end;
-
 Node* ll_new() {
-  return &ll_end;
+  return NULL;
 }
 
 Node* ll_alloc() {
@@ -47,11 +45,11 @@ Node* ll_add(Node* head, void* value) {
 void ll_pretty_print(char* name, Node* head, void (*pprint) (FILE*, void*)) {
   Node *cur = head;
   printf("List{%s}|", name);
-  while (cur != &ll_end) {
+  while (cur) {
     printf("(");
     pprint(stdout, cur->value);
 
-    if (cur->next == &ll_end) {
+    if (!cur->next) {
       printf(",END)|");
       break;
     }
@@ -76,8 +74,12 @@ void ll_vfree_noop(__attribute__((unused)) void* value) {
 }
 
 void ll_free(Node** head, void (vfree)(void*)) {
+  if (!head) {
+    return;
+  }
+
   Node* cur = *head;
-  while (cur != &ll_end) {
+  while (cur) {
     Node* next = cur->next;
     // david - try putting the free before the vfree and see what valgrind reports
     vfree(cur->value);
@@ -87,6 +89,25 @@ void ll_free(Node** head, void (vfree)(void*)) {
   *head = NULL;
 }
 
+Node* ll_reverse(Node* head, void* (vcopy)(void*)) {
+  Node *new_head = NULL;
+
+  while (head) {
+    void* vnew = vcopy(head->value);
+    if (!vnew) {
+      perror("Error copying value with provided copy function");
+    }
+    new_head = ll_add(new_head, vnew);
+    head = head->next;
+  }
+
+  return new_head;
+}
+
+void* ll_vcopy_noop(void* value) {
+  return value;
+}
+
 /******************************************************************************/
 
 void my_printval(FILE* fp, void* value) {
@@ -94,7 +115,7 @@ void my_printval(FILE* fp, void* value) {
 }
 
 void test_01() {
-  Node *l1 = ll_new();
+  Node *l1 = NULL; // ll_new();
   ll_pretty_print("emtpy", l1, my_printval);
   l1 = ll_add(l1, "David");
   ll_pretty_print("has1 ", l1, my_printval);
@@ -151,12 +172,27 @@ void test_02 () {
   ll_free(&l1, free);
 }
 
+void test_03 () {
+  printf("%s(%d).%s: reverse a linked list\n", __FILE__, __LINE__, __FUNCTION__);
+  Node* l1 = ll_new();
+  l1 = ll_add(l1, "first");
+  l1 = ll_add(l1, "second");
+  l1 = ll_add(l1, "third");
+
+  ll_pretty_print("l1", l1, my_printval);
+  Node* l2 = ll_reverse(l1, ll_vcopy_noop);
+  ll_pretty_print("l2", l2, my_printval);
+
+  ll_free(&l1, ll_vfree_noop);
+  ll_free(&l2, ll_vfree_noop);
+}
+
 /*********************************************************************************/
 int main (__attribute__((unused)) int argc, __attribute__((unused)) char** argv) {
   printf("Hello, Linked Lists\n");
 
   test_01();
-  test_02();
-
+  /* test_02(); */
+  test_03();
   return 0;
 }
