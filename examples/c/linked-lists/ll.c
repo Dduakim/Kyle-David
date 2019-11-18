@@ -21,7 +21,7 @@ Node* ll_new() {
 }
 
 Node* ll_alloc() {
-  Node *n = (Node*)malloc(1 * sizeof(Node));
+  Node* n = (Node*)malloc(1 * sizeof(Node));
   if (!n) {
     fprintf(stderr, "%s(%d).%s: Error allocating memory: errno=%d; error=%s\n", __FILE__, __LINE__, __FUNCTION__, errno, strerror(errno));
     return NULL;
@@ -31,7 +31,7 @@ Node* ll_alloc() {
 }
 
 Node* ll_add(Node* head, void* value) {
-  Node *nhead = ll_alloc();
+  Node* nhead = ll_alloc();
   if (!nhead) {
     return NULL;
   }
@@ -42,8 +42,55 @@ Node* ll_add(Node* head, void* value) {
   return nhead;
 }
 
+Node* ll_add_end(Node* head, void* value) {
+  Node* nend = ll_alloc();
+  if (!nend) {
+    return NULL;
+  }
+
+  nend->value = value;
+  nend->next = NULL;
+
+  if (!head) {
+    return nend;
+  }
+
+  Node* cur = head;
+  while (cur->next) {
+    cur = cur->next;
+  }
+
+  cur->next = nend;
+
+  return head;
+}
+
+Node* ll_nth(Node* head, unsigned int nn) {
+  while (head) {
+    if (nn == 0) {
+      return head;
+    }
+
+    head = head->next;
+    --nn;
+  }
+
+  return NULL; // not found
+}
+
+void* ll_nth_value(Node* head, unsigned int nn) {
+  Node* node = ll_nth(head, nn);
+
+  if (node) {
+    return node->value;
+  }
+
+  return NULL; // not found
+}
+
+
 void ll_pretty_print(char* name, Node* head, void (*pprint) (FILE*, void*)) {
-  Node *cur = head;
+  Node* cur = head;
   printf("List{%s}|", name);
   while (cur) {
     printf("(");
@@ -90,7 +137,7 @@ void ll_free(Node** head, void (vfree)(void*)) {
 }
 
 Node* ll_reverse(Node* head, void* (vcopy)(void*)) {
-  Node *new_head = NULL;
+  Node* new_head = NULL;
 
   while (head) {
     void* vnew = vcopy(head->value);
@@ -187,6 +234,42 @@ void test_03 () {
   ll_free(&l2, ll_vfree_noop);
 }
 
+void test_04 () {
+  printf("%s(%d).%s: add at the end O(n)...\n", __FILE__, __LINE__, __FUNCTION__);
+  Node *l1 = ll_new();
+  l1 = ll_add_end(l1, "first");
+  l1 = ll_add_end(l1, "second");
+  l1 = ll_add_end(l1, "third");
+  ll_pretty_print("l1", l1, my_printval);
+  ll_free(&l1, ll_vfree_noop);
+}
+
+void test_05 () {
+  printf("%s(%d).%s: ll_nth_value...\n", __FILE__, __LINE__, __FUNCTION__);
+  Node* l1 = ll_new();
+  l1 = ll_add_end(l1, "first");
+  l1 = ll_add_end(l1, "second");
+  l1 = ll_add_end(l1, "third");
+  l1 = ll_add_end(l1, "fourth");
+
+  ll_pretty_print("l1", l1, my_printval);
+  for (unsigned int ii = 0; ii < 4; ++ii) {
+    char* val = (char*)ll_nth_value(l1, ii);
+    if (!val) {
+      printf("%s(%d).%s: FAILURE ll_nth_value not found for ii=%u\n", __FILE__, __LINE__, __FUNCTION__, ii);
+      break;
+    }
+    printf("%s(%d).%s: ll_nth_value(l1,%u) = %s\n", __FILE__, __LINE__, __FUNCTION__, ii, val);
+  }
+
+  char* val = (char*)ll_nth_value(l1, 9999);
+  if (val != NULL) {
+    printf("%s(%d).%s: FAILURE ll_nth_value found? ii=%u\n", __FILE__, __LINE__, __FUNCTION__, 9999);
+  }
+
+  ll_free(&l1, ll_vfree_noop);
+}
+
 /*********************************************************************************/
 int main (__attribute__((unused)) int argc, __attribute__((unused)) char** argv) {
   printf("Hello, Linked Lists\n");
@@ -194,5 +277,7 @@ int main (__attribute__((unused)) int argc, __attribute__((unused)) char** argv)
   test_01();
   /* test_02(); */
   test_03();
+  test_04();
+  test_05();
   return 0;
 }
