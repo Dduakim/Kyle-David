@@ -6,7 +6,7 @@ struct node
     int num;
     struct node *next;
 }
-*startNode;
+*startNode; // modify to take this as argument & return
 
 void createNodeList(int n); // take an input of n and makes a list with n amount of nodes
 void displayList(); // function to display the list
